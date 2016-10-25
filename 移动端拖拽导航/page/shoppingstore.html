@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		 <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <title>商城</title>
+	    <link href="../css/mui.min.css" rel="stylesheet"/>
+	    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+	     <script src="../js/mui.min.js"></script>
+	    <script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+	    <script type="text/javascript" src="../js/config.js"></script>
+	    <script type="text/javascript" src="../js/common.js"></script>
+	</head>
+	<style type="text/css">
+		    /*body{background-color:#000000;}*/  
+        .window{position:absolute;z-index:1;overflow:hidden;width:100%;height:400px;background-color:red;left: 0px;}  
+        .dragme{position:relative;background-image:url('img/testbg.png');width:100%px;height:400px;} 
+	</style>
+<body>   
+	<div align="left" class="window"> 
+	     <div id="moveid"  class="dragme"> 
+		        这是一个可以通过触摸屏拖动的demo<br> 
+		            这个demo花费了我半天时间，原因是以前从来没有做过面向触摸屏的Web，按说mousedown,mouseup,mousemove和touchstart，touchend，touchmove  
+		            之间是可以互通的，也就是说一般面向pc开发的mouse时间对touch事件有效，据说是效率有差异。但是pc上测试没有任何问题，在手机上就是无效。  
+		            然后……  
+		            然后百度了很久很久……  
+	          
+	     </div> 
+	 </div>
+		
+</body>
+
+<script type="text/javascript">   
+var isdrag=false;   
+var tx,x;    
+$(function(){  
+    document.getElementById("moveid").addEventListener('touchend',function(){  
+        sdrag = false;  
+    });  
+    document.getElementById("moveid").addEventListener('touchstart',selectmouse);  
+    document.getElementById("moveid").addEventListener('touchmove',movemouse);  
+});  
+function movemouse(e){   
+  if (isdrag){   
+   var n = tx + e.touches[0].pageX - x;  
+   $("#moveid").css("left",n);  
+   return false;   
+   }   
+}   
+ 
+function selectmouse(e){   
+   isdrag = true;   
+   tx = parseInt(document.getElementById("moveid").style.left+0);   
+   x = e.touches[0].pageX;    
+   return false;   
+}   
+</script> 
+</html>

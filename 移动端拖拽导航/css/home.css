@@ -1,0 +1,32 @@
+.mui-table-view-cell:after{
+	height: 0;
+	
+}
+.box{
+	width: 100%;
+	/*overflow: hidden;*/
+	
+}
+.mui-table-view{
+	width: 200%;
+	/*margin-left: -25%;*/
+	height: 45px;
+}
+.mui-table-view-cell{
+	float: left;
+	width: 12.5%;
+	background: #fff;
+	border-left: 1px solid #ccc;
+	padding: 23px auto;
+}
+.active{
+	/*border-bottom: 3px solid #55AEE5;*/
+	width:12.5%;
+	height: 3px;
+	background: #55AEE5;
+	z-index: 99999;
+	top: 2.7rem;
+	left: 0;
+	/*left: 25%;*/
+	/*color: #fff;*/
+}

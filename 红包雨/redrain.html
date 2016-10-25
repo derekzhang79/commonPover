@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <script src="js/jquery-2.1.4.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+      	mui.init();
+    </script>
+    <style type="text/css">
+    	#mui-content{
+    		height: 1024px;
+    		background: url(img/background_1.png) no-repeat;
+    		background-size: cover;
+    	}
+    	#coverBox{
+    		position: relative;
+    		height: 1024px;
+    	}
+    	#cover{
+    		padding: 24%;
+    		position: absolute;
+    		height: 1024px;
+    		top: 0%;
+    		left: 0%;
+    		display: none;
+    	}
+    	#cover img{
+    		margin: 0 auto;
+    	}
+    </style>
+</head>
+<body>
+	<div id="mui-content">
+	</div>
+	<!--<div id="coverBox">-->
+		<div id="cover">
+			<div style="position: relative;width:500px;">
+				<span class="mui-icon mui-icon-close" id="close" style="color: #fff;font-size:3rem;position: absolute;right: 4rem;"></span>
+				<img src="img/open.png"></img>
+			</div>
+			
+		</div>
+	<!--</div>-->
+	
+</body>
+<script>
+	var content=$('#mui-content');
+	var timer=null;
+	$(function(){
+		
+		var screenWidth = window.screen.width;
+		var screenHeight = window.screen.height;
+		content.css("width",content.width()+"px");
+		$("#cover").css("width",content.width()+"px");
+		$("#close").on("tap",function(){
+			goon();
+		})
+		begin1();
+	})
+	//开始函数
+function begin1(){
+    content.css("display","block");
+    timer=setInterval(move,1000/60);
+
+}
+	//=================================封装函数==========================================
+	function getCss(ele,key){
+	    return ele.currentStyle ? ele.currentStyle[key]
+	        :document.defaultView.getComputedStyle(ele,null)[key];
+	}
+	
+	//随机函数
+	function random(min,max){
+	   var choice=max-min+1;
+	    return Math.floor(Math.random()*choice+min)
+	}
+	/*封装获取高度，宽度以及横纵坐标的函数*/
+	function getDemensions(element){
+	    return {
+	        'x':element.offsetLeft,
+	        'y':element.offsetTop,
+	        'width':element.offsetWidth,
+	        'height':element.offsetHeight
+	    };
+	}
+	//================================创建红包对象===========================================
+//通过对象来创建红包
+//相当于先设置红包的一些必须的属性，当我们真正的需要一架红包的时候，直接new出来就ok
+function plan(x,y,sizeX,sizeY,sudu,leftsudu,right,dieTime,dieImage,imageSrc){
+    this.x = x;
+    this.y = y;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.sudu = sudu;
+    this.leftsudu = leftsudu;
+    this.right = right;
+    this.dieTime = dieTime;
+    this.dieImage = dieImage;
+    this.imageSrc = imageSrc;
+    //对象要与界面的节点联系起来，这里设置了一个planImageNode属性
+    //通过这个属性来设置节点信息
+    this.planImageNode = null;
+    this.planIsDie = false;
+    
+
+    //红包速度
+    this.planMove = function() {
+        this.planImageNode.style.top = this.planImageNode.offsetTop + this.sudu + 10 + "px";
+          this.planImageNode.style.right = this.planImageNode.offsetRight +this.leftsudu+3+"px";
+//      this.planImageNode.style.left = this.planImageNode.offsetLeft +this.leftsudu+5+"px";
+       
+    }
+
+    //红包初始化方法
+    this.init = function(){
+        this.planImageNode = document.createElement('img');
+        this.planImageNode.style.position = 'absolute';
+        this.planImageNode.style.left = this.x + 'px';
+        this.planImageNode.style.top = this.y + 'px';
+        this.planImageNode.src = this.imageSrc;
+        content.append(this.planImageNode);
+    }
+
+    this.init();
+}
+
+
+//==========================================================================================
+//控制背景变量
+var backgroundpositiony=0;
+
+//人为控制时间变量
+var mark=0;
+//循环变量
+var i = 0;
+
+//存放红包数组
+var enemies=[];
+
+//控制红包出来时间
+var mark1=0;
+//主循环
+function move(){
+    mark++;
+   
+
+    //创建飞机
+    if(mark==10){
+        mark1++;
+        if(mark1 % 5==0){
+            enemies.push(new plan(random(50,672),-110,156,156,random(1,1),random(1,3),random(1,10),
+                360,'img/enemy1_fly_1.png','img/red.png'));
+        }
+        if(mark1 % 10==0){
+            enemies.push(new plan(random(60,620),-110,156,156,1,random(1,1),random(1,20),
+                360,'img/enemy1_fly_1.png','img/red.png'));
+        }
+        else{
+            enemies.push(new plan(random(25,696),-110,156,156,random(1,1),random(1,8),random(1,30),
+                300,'img/enemy1_fly_1.png','img/red.png'));
+        }
+        mark=0;
+    }
+    //调用红包
+    for(i=0;i<enemies.length;i++){
+        if(!enemies[i].planIsDie){
+            enemies[i].planMove();
+        }
+       
+        //超过屏幕最大值时移除
+        if(enemies[i].planImageNode.offsetTop > 1024){
+            content[0].removeChild(enemies[i].planImageNode);
+            enemies.splice(i,1);
+        }
+        enemies[i].planImageNode.onclick = function(){
+//		    menu.style.display = 'block';
+		    clearInterval(timer);
+		     $("#cover").fadeIn();
+		     $(this).remove();
+//		     content.removeChild(enemies[i].planImageNode);
+//            enemies.splice(i,1);
+//		    content[0].removeEventListener('mousemove',planmove,false);
+//		    document.removeEventListener('mousemove',boundary,false);
+		}
+    }
+    
+    
+}
+//继续
+function goon(){
+    timer=setInterval(move,1000/60);
+   
+    $("#cover").fadeOut();
+
+}
+</script>
+</html>
