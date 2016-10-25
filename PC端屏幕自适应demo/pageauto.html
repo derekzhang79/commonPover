@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>PC端屏幕自适应demo</title>
+		<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+		<style type="text/css">
+			.minWidth_ie1024{
+				min-width: 1024px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="divBox" style="width: 100%;height: 200px;background: #ccc;">
+			
+		</div>
+	</body>
+	
+	<script>
+	var $D = {
+			  getWinWidth: function () {
+			    this.width = 0;
+			    if (window.innerWidth) this.width = window.innerWidth - 18;
+			    else if (document.documentElement && document.documentElement.clientWidth) 
+			    this.width = document.documentElement.clientWidth;
+			    else if (document.body && document.body.clientWidth) 
+			    this.width = document.body.clientWidth;
+			    return  this.width;
+//			    console.log(this.width)
+			  },
+			  
+			  getWinHeight: function () {
+			    this.height = 0;
+			    if (window.innerHeight) this.height = window.innerHeight - 18;
+			   else if (document.documentElement && document.documentElement.clientHeight) 
+			    this.height = document.documentElement.clientHeight;
+			   else if (document.body && document.body.clientHeight) 
+			    this.height = document.body.clientHeight;
+			  },
+			  
+			  getScrollX: function () {
+			    this.scrollX = 0;
+			   if (typeof window.pageXOffset == "number") this.scrollX = window.pageXOffset;
+			   else if (document.documentElement && document.documentElement.scrollLeft)
+			    this.scrollX = document.documentElement.scrollLeft;
+			   else if (document.body && document.body.scrollLeft) 
+			    this.scrollX = document.body.scrollLeft; 
+			   else if (window.scrollX) this.scrollX = window.scrollX;
+			  },
+			  
+			  getScrollY: function () {
+			    this.scrollY = 0;    
+			    if (typeof window.pageYOffset == "number") this.scrollY = window.pageYOffset;
+			    else if (document.documentElement && document.documentElement.scrollTop)
+			    this.scrollY = document.documentElement.scrollTop;
+			   else if (document.body && document.body.scrollTop) 
+			    this.scrollY = document.body.scrollTop; 
+			   else if (window.scrollY) this.scrollY = window.scrollY;
+			  },
+			  
+			  getAll: function () {
+			    this.getWinWidth(); this.getWinHeight();
+			    this.getScrollX();  this.getScrollY();
+			  }
+			  
+			}
+	
+	
+	
+	
+	
+	
+		
+    /**-------------------缩小窗口时出现滚动条begin-----------------------------*/
+    var dBody = $(document.body);
+    // 屏幕宽度
+    var screenWidth = window.screen.width;
+    if (document.documentMode && document.documentMode < 9) {
+        dBody.addClass("minWidth_ie1024")
+    };
+    $(window).resize(function(){
+        window.innerWidthCache=window.innerWidth || document.body.clientWidth;
+        window.innerHeightCache=window.innerHeight || document.body.clientHeight;
+
+        var explorer = window.navigator.userAgent;
+        if(explorer.indexOf("Safari") == -1 && explorer.indexOf("MetaSr")>=0){
+            $(document).find("html").css("overflowX", "hidden");
+            console.log("缩放功能不支持搜狗浏览器兼容模式")
+            return }
+        // 邮箱整个界面的宽度
+        var winW = $D.getWinWidth() > 1024 ?$D.getWinWidth() : 1024;
+          console.log(winW)
+          console.log($D.getWinWidth())
+        if (winW < screenWidth){
+          $(document).find("html").css("overflowX", "auto");
+          dBody.css({
+             "overflowX": "auto",
+             "position" : "relative"// 兼容IE7,不然overflowX不起作用
+          }); 
+          if (document.documentMode && document.documentMode < 9 && winW > 1024 ) {
+            dBody.css("overflowX", "hidden");
+          };
+        }else{
+          dBody.css("overflowX", "hidden");
+          $(document).find("html").css("overflowX", "hidden");
+        }
+        if ( (document.documentMode && document.documentMode > 8)||!document.documentMode ) {
+            dBody.css("width", winW);
+        }
+        //dBody.css("width", winW > 1024 ? 100% : 1024); // 不加这行的话,有滚动条,但滚动条拉到右侧会有空格
+   });
+   /*-------------------缩小窗口时出现滚动条end-----------------------------*/
+
+	</script>
+</html>
